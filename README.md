@@ -49,12 +49,12 @@ uv run streamlit run app.py
 1. Push this project to GitHub.
 2. Create a new app in Streamlit Community Cloud.
 3. Set `app.py` as the entry point.
-4. Ensure `requirements.txt`, `runtime.txt`, `sample_students.csv`, and the `photos/` folder are included in the repository.
+4. Ensure `requirements.txt`, `packages.txt`, `runtime.txt`, `sample_students.csv`, and the `photos/` folder are included in the repository.
 5. Reboot the app after deployment if dependency installation changes.
 
 ### Streamlit Cloud note
 
-`face_recognition` depends on `dlib`, which is sensitive to Python version and system build support. This repo includes `runtime.txt` to pin Streamlit Community Cloud to Python 3.11, which is the safest target for this project.
+`face_recognition` depends on `dlib`, which is sensitive to Python version and system build support. This repo includes `runtime.txt` to pin Streamlit Community Cloud to Python 3.11, and `packages.txt` to install Linux build dependencies that Community Cloud can install with `apt-get`.
 
 ## CSV Format
 
