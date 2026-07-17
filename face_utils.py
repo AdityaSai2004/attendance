@@ -4,10 +4,14 @@ from dataclasses import dataclass
 from io import BytesIO
 from pathlib import Path
 
-import face_recognition
 import numpy as np
 import pandas as pd
 from PIL import Image, UnidentifiedImageError
+
+try:
+    import face_recognition
+except ModuleNotFoundError:
+    face_recognition = None
 
 
 REQUIRED_COLUMNS = {"Name", "Photo"}
@@ -30,6 +34,15 @@ class RecognitionResult:
     distance: float | None = None
 
 
+def _require_face_recognition() -> None:
+    if face_recognition is None:
+        raise FaceLoadingError(
+            "The 'face_recognition' package is not installed in this environment. "
+            "For Streamlit Community Cloud, add a runtime.txt file with Python 3.11 "
+            "and make sure requirements.txt includes face-recognition."
+        )
+
+
 def _validate_student_sheet(student_df: pd.DataFrame) -> None:
     missing_columns = REQUIRED_COLUMNS.difference(student_df.columns)
     if missing_columns:
@@ -49,6 +62,7 @@ def _load_photo(photo_path: Path) -> np.ndarray:
 
 
 def scan_known_faces(student_df: pd.DataFrame, photos_dir: Path) -> KnownFaces:
+    _require_face_recognition()
     _validate_student_sheet(student_df)
 
     if not photos_dir.exists():
@@ -81,6 +95,8 @@ def scan_known_faces(student_df: pd.DataFrame, photos_dir: Path) -> KnownFaces:
 
 
 def recognize_student(image_bytes: bytes, known_faces: KnownFaces, threshold: float) -> RecognitionResult:
+    _require_face_recognition()
+
     try:
         with Image.open(BytesIO(image_bytes)) as image:
             rgb_image = np.array(image.convert("RGB"))
