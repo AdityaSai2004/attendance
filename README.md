@@ -4,7 +4,7 @@ A simple Streamlit-based attendance app for school projects that recognizes stud
 
 ## Features
 
-- Face recognition using `face_recognition`
+- Face recognition using `InsightFace`
 - One-page Streamlit UI
 - In-memory attendance tracking
 - CSV export generated fully in memory
@@ -36,7 +36,7 @@ face-attendance/
 uv pip install -r requirements.txt
 ```
 
-If `face_recognition` fails to build on your machine, install the required native build tools for `dlib` first, then rerun the command.
+On the first run, InsightFace downloads its model files automatically. Make sure the environment has internet access for that initial model download.
 
 ## Run Locally with uv
 
@@ -54,7 +54,7 @@ uv run streamlit run app.py
 
 ### Streamlit Cloud note
 
-`face_recognition` depends on `dlib`, which is sensitive to Python version and system build support. This repo includes `runtime.txt` to pin Streamlit Community Cloud to Python 3.11, and `packages.txt` to install Linux build dependencies that Community Cloud can install with `apt-get`.
+InsightFace uses ONNX Runtime and downloads its model pack on first startup. This repo includes `runtime.txt` to pin Streamlit Community Cloud to Python 3.11. `packages.txt` can remain in place for cloud builds, but the app no longer depends on `face_recognition` or `dlib`.
 
 ## CSV Format
 
@@ -78,7 +78,7 @@ On download, the app adds a new column for today's date and marks:
 - Store one image per student in the `photos/` folder.
 - Use clear front-facing images.
 - Each image should contain exactly one detectable face.
-- The filename must match the value in the Excel `Photo` column.
+- The filename must match the value in the CSV `Photo` column.
 
 ## Screenshots
 
